@@ -67,8 +67,8 @@ if ($request_method == 'post') {
 
   echo json_encode([
     "slackUsername" => "codelikesuraj",
-    "operation_type" => $operation,
-    "result" => intval($result)
+    "result" => intval($result),
+    "operation_type" => $operation
   ]);
   exit();
 }
