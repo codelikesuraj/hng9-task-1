@@ -3,21 +3,13 @@
 header('Content-type: application/json');
 
 $request_method = strtolower($_SERVER['REQUEST_METHOD']);
-
-function check_fields(array $keys, array $array)
-{
-  foreach($keys as $key)
-  {
-    if(!array_key_exists($key, $array)){
-      return false;
-    }
-  }
-  return true;
-}
+$result = 0;
+$operation = null;
+$x = 0;
+$y = 0;
 
 if ($request_method == 'post') {
-  if(isset($_POST) && check_fields(['operation_type', 'x', 'y'], $_POST))
-  {
+  if (isset($_POST) && array_key_exists('operation_type', $_POST)) {
     $data = $_POST;
   } else {
     $data = (array)json_decode(file_get_contents('php://input'));
@@ -25,29 +17,57 @@ if ($request_method == 'post') {
 
   // check operand
   if (!isset($data['operation_type'])) {
-    echo json_encode(['error' => 'invalid operation type']);
+    http_response_code(400);
+    echo json_encode(['error' => 'operation type cannot be empty']);
     exit();
   }
 
-  if (!in_array(strtolower($data['operation_type']), ['addition', 'subtraction', 'multiplication'])) {
-    echo json_encode(['error' => 'invalid operation type']);
-    exit();
+  $op_type = $data['operation_type'];
+  if (strpos(strtolower($op_type), 'add') || strpos(strtolower($op_type), 'sum') || strpos(strtolower($op_type), 'plus') || strpos(strtolower($op_type), '+')) {
+    $operation = 'addition';
+  } else if (strpos(strtolower($op_type), 'subtract') || strpos(strtolower($op_type), 'minus') || strpos(strtolower($op_type), 'remove') || strpos(strtolower($op_type), '-')) {
+    $operation = 'subtraction';
+  } else if (strpos(strtolower($op_type), 'multipl') || strpos(strtolower($op_type), 'times') || strpos(strtolower($op_type), 'product') || strpos(strtolower($op_type), '*')) {
+    $operation = 'multiplication';
+  }
+
+  if (is_null($operation)) {
+    http_response_code(400);
+    echo json_encode([
+      'error' => 'invalid operation type'
+    ]);
   }
 
   // check if values are set
+  $errors = [];
   if (!isset($data['x']) || empty(trim($data['x'])) || !is_numeric(trim($data['x']))) {
-    echo json_encode(['error' => 'invalid value for x']);
-    exit();
+    $errors[] = 'invalid value for x';
   }
   if (!isset($data['y']) || empty(trim($data['y'])) || !is_numeric(trim($data['y']))) {
-    echo json_encode(['error' => 'invalid value for y']);
-    exit();
+    $errors[] = 'invalid value for y';
+  }
+  if (count($errors)) {
+    preg_match_all('!\d+!', $op_type, $numbers);
+    if (is_null($numbers) || count($numbers[0]) !== 2) {
+      $errors[] = 'values cannot be empty';
+      echo json_encode([
+        'errors' => $errors
+      ]);
+      exit();
+    }
+
+    if (strpos(strtolower($op_type), 'from')) {
+      $y = $numbers[0][0];
+      $x = $numbers[0][1];
+    } else {
+      $x = $numbers[0][0];
+      $y = $numbers[0][1];
+    }
+  } else {
+    $x = intval($data['x']);
+    $y = intval($data['y']);
   }
 
-  $result = 0;
-  $operation = $data['operation_type'];
-  $x = intval($data['x']);
-  $y = intval($data['y']);
 
   switch ($operation) {
     case 'addition':
