@@ -17,7 +17,6 @@ if ($request_method == 'post') {
 
   // check operand
   if (!isset($data['operation_type'])) {
-    http_response_code(400);
     echo json_encode(['error' => 'operation type cannot be empty']);
     exit();
   }
@@ -32,10 +31,10 @@ if ($request_method == 'post') {
   }
 
   if (is_null($operation)) {
-    http_response_code(400);
     echo json_encode([
       'error' => 'invalid operation type'
     ]);
+    exit();
   }
 
   // check if values are set
