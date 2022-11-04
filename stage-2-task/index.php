@@ -12,10 +12,11 @@ if ($request_method == 'post') {
     echo json_encode(['error' => 'invalid operation type']);
     exit();
   }
-  if (!in_array(strtolower($data->operation_type), ['addition', 'subtraction', 'multiplication'])) {
-    echo json_encode(['error' => 'invalid operation type']);
-    exit();
-  }
+
+  // if (!in_array(strtolower($data->operation_type), ['addition', 'subtraction', 'multiplication'])) {
+  //   echo json_encode(['error' => 'invalid operation type']);
+  //   exit();
+  // }
 
   // check if values are set
   if (!isset($data->x) || empty(trim($data->x))){
@@ -28,7 +29,7 @@ if ($request_method == 'post') {
   }
 
   $result = 0;
-  $operation = strtolower(trim($data->operation_type));
+  $operation = $data->operation_type;
   $x = intval(trim($data->x));
   $y = intval(trim($data->y));
 
@@ -49,7 +50,7 @@ if ($request_method == 'post') {
   }
 
   echo json_encode([
-    // "slackUsername" => "codelikesuraj",
+    "slackUsername" => "codelikesuraj",
     "operation_type" => $operation,
     "result" => intval($result)
   ]);

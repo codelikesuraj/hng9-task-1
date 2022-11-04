@@ -26,7 +26,7 @@ Using the same server setup from stage one
     {
         "slackUsername" : String, 
         "operation_type" : Enum value,
-        "result" : "Integer"
+        "result" : Integer
     }
     ```
 - Push to **GitHub**
