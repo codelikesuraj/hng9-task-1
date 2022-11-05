@@ -22,11 +22,11 @@ if ($request_method == 'post') {
   }
 
   $op_type = $data['operation_type'];
-  if (strpos(strtolower($op_type), 'add') || strpos(strtolower($op_type), 'sum') || strpos(strtolower($op_type), 'plus') || strpos(strtolower($op_type), '+')) {
+  if (strpos(strtolower($op_type), 'add') !== false || strpos(strtolower($op_type), 'sum') !== false || strpos(strtolower($op_type), 'plus') !== false || strpos(strtolower($op_type), '+') !== false) {
     $operation = 'addition';
-  } else if (strpos(strtolower($op_type), 'subtract') || strpos(strtolower($op_type), 'minus') || strpos(strtolower($op_type), 'remove') || strpos(strtolower($op_type), '-')) {
+  } else if (strpos(strtolower($op_type), 'subtract') !== false || strpos(strtolower($op_type), 'minus') !== false || strpos(strtolower($op_type), 'remove') !== false || strpos(strtolower($op_type), '-') !== false) {
     $operation = 'subtraction';
-  } else if (strpos(strtolower($op_type), 'multipl') || strpos(strtolower($op_type), 'times') || strpos(strtolower($op_type), 'product') || strpos(strtolower($op_type), '*')) {
+  } else if (strpos(strtolower($op_type), 'multipl') !== false || strpos(strtolower($op_type), 'times') !== false || strpos(strtolower($op_type), 'product') !== false || strpos(strtolower($op_type), '*') !== false) {
     $operation = 'multiplication';
   }
 
